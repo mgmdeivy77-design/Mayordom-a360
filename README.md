@@ -1,11 +1,34 @@
-<div align="center">
+# Mayordomo Familiar RD — PWA
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+Aplicación web progresiva (PWA) optimizada para celulares **Android** para la administración financiera integral, presupuesto familiar, ahorro, inversiones, compras en supermercados e inventario del hogar en República Dominicana (DOP$).
 
-  <h1>Built with AI Studio</h2>
+## Características PWA
+- Instalable en pantalla de inicio en **Android (Chrome / Edge / Samsung Internet)** e iOS Safari.
+- Navegación inferior ergonómica para uso con una mano en dispositivos móviles.
+- Funcionamiento **sin conexión (Offline)** mediante Service Worker (`vite-plugin-pwa` + Workbox) y persistencia local en `LocalStorage`.
+- Exportación de reportes en **PDF**, **Excel (.xlsx)**, **CSV** y copias de seguridad **JSON**.
+- Asistente **Mayordomo AI** (conectado a Gemini en línea y motor de análisis local sin conexión).
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Desarrollo Local
+```bash
+npm install
+npm run dev
+```
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+## Compilación de Producción
+```bash
+npm run lint
+npm run build
+```
 
-</div>
+## Despliegue en GitHub y Vercel
+1. Sube este repositorio a **GitHub** (`git init`, `git add .`, `git commit -m "PWA lista para Vercel"`, `git push`).
+2. En **Vercel**, importa el repositorio desde GitHub.
+3. Vercel detectará automáticamente la configuración de `vercel.json`:
+   - Framework: `Vite`
+   - Build Command: `vite build`
+   - Output Directory: `dist`
+4. *(Opcional para el módulo Gemini AI en línea)* En **Vercel > Settings > Environment Variables**, agrega:
+   - `GEMINI_API_KEY` = tu clave de API de Google Gemini.
+5. Haz clic en **Deploy**.
+6. Abre la URL HTTPS de Vercel en **Google Chrome en tu celular Android** y toca **"Instalar App"** en la barra superior o en el menú `⋮ > Instalar aplicación`.

@@ -1,0 +1,6 @@
+{
+  "name": "Mayordomo Familiar RD",
+  "description": "Sistema integral de administración financiera, ahorro, inversiones, compras e inventario para familias de República Dominicana.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
