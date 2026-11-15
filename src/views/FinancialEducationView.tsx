@@ -43,14 +43,14 @@ export const FinancialEducationView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-1">
-          <BookOpen className="w-4 h-4" />
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+          <BookOpen className="w-4 h-4 shrink-0" />
           <span>Módulo de Educación & Sabiduría Financiera</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
           Educación Financiera RD
         </h1>
         <p className="text-xs text-slate-500 mt-1">
@@ -59,12 +59,12 @@ export const FinancialEducationView: React.FC = () => {
       </div>
 
       {/* Article Selector Tabs */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
         {educationalArticles.map((art) => (
           <button
             key={art.id}
             onClick={() => setSelectedArticle(art)}
-            className={`p-4 rounded-2xl border text-left transition-all ${
+            className={`p-3.5 sm:p-4 rounded-2xl border text-left transition-all ${
               selectedArticle.id === art.id
                 ? 'bg-indigo-600 text-white border-indigo-600 shadow-md font-bold'
                 : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-indigo-500 text-slate-800 dark:text-slate-200'
@@ -78,12 +78,12 @@ export const FinancialEducationView: React.FC = () => {
       </div>
 
       {/* Selected Article Viewer */}
-      <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
         <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
           <span className="bg-indigo-100 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300 px-2.5 py-0.5 rounded text-[10px] font-extrabold uppercase">
             {selectedArticle.category}
           </span>
-          <h2 className="text-xl font-extrabold text-slate-900 dark:text-white mt-2">
+          <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white mt-2">
             {selectedArticle.title}
           </h2>
         </div>
@@ -94,7 +94,7 @@ export const FinancialEducationView: React.FC = () => {
       </div>
 
       {/* Interactive Financial Quiz */}
-      <div className="p-6 bg-slate-900 text-white rounded-3xl shadow-xl space-y-4">
+      <div className="p-4 sm:p-6 bg-slate-900 text-white rounded-2xl sm:rounded-3xl shadow-xl space-y-4">
         <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
           <HelpCircle className="w-4 h-4" />
           <span>Evaluación de Conocimientos</span>
@@ -129,9 +129,9 @@ export const FinancialEducationView: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex justify-between items-center pt-2">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 pt-2">
           {quizSubmitted ? (
-            <div className="text-sm font-bold text-amber-400">
+            <div className="text-xs sm:text-sm font-bold text-amber-400">
               🎉 Tu Puntuación: {calculateQuizScore()} / {sampleQuiz.length} respuestas correctas.
             </div>
           ) : (
@@ -140,7 +140,7 @@ export const FinancialEducationView: React.FC = () => {
 
           <button
             onClick={() => setQuizSubmitted(true)}
-            className="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-xs"
+            className="w-full sm:w-auto px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold rounded-xl text-xs"
           >
             Verificar Respuestas
           </button>

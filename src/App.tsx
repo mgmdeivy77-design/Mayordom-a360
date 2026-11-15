@@ -105,7 +105,7 @@ export default function App() {
       });
 
     const budgetAlerts = state.budgets.filter(
-      (b) => (categoryExpenses[b.category] || 0) > b.limitAmount
+      (b) => (!b.period || b.period === 'monthly') && (categoryExpenses[b.category] || 0) > b.limitAmount
     ).length;
 
     const eventAlerts = state.calendarEvents.filter(
@@ -151,17 +151,68 @@ export default function App() {
     }));
   };
 
-  // Custom Category Handlers
-  const handleAddCustomExpenseCategory = (cat: string) => {
-    if (!state.settings.customExpenseCategories.includes(cat)) {
-      setState((prev) => ({
+  // Editable & Addable Category Handlers (Income & Expense)
+  const handleAddCategory = (kind: 'income' | 'expense', name: string) => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    setState((prev) => {
+      const key = kind === 'income' ? 'incomeCategories' : 'expenseCategories';
+      const existing = prev.settings[key] || [];
+      if (existing.some((c) => c.toLowerCase() === trimmed.toLowerCase())) {
+        return prev;
+      }
+      return {
         ...prev,
         settings: {
           ...prev.settings,
-          customExpenseCategories: [...prev.settings.customExpenseCategories, cat],
+          [key]: [...existing, trimmed],
         },
-      }));
-    }
+      };
+    });
+  };
+
+  const handleRenameCategory = (kind: 'income' | 'expense', oldName: string, newName: string) => {
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === oldName) return;
+    setState((prev) => {
+      const key = kind === 'income' ? 'incomeCategories' : 'expenseCategories';
+      const existing = prev.settings[key] || [];
+      const updatedCategories = existing.map((c) => (c === oldName ? trimmed : c));
+
+      const updatedTransactions = prev.transactions.map((t) =>
+        t.type === kind && t.category === oldName ? { ...t, category: trimmed } : t
+      );
+
+      const updatedBudgets =
+        kind === 'expense'
+          ? prev.budgets.map((b) => (b.category === oldName ? { ...b, category: trimmed } : b))
+          : prev.budgets;
+
+      return {
+        ...prev,
+        transactions: updatedTransactions,
+        budgets: updatedBudgets,
+        settings: {
+          ...prev.settings,
+          [key]: updatedCategories,
+        },
+      };
+    });
+  };
+
+  const handleDeleteCategory = (kind: 'income' | 'expense', name: string) => {
+    setState((prev) => {
+      const key = kind === 'income' ? 'incomeCategories' : 'expenseCategories';
+      const existing = prev.settings[key] || [];
+      if (existing.length <= 1) return prev;
+      return {
+        ...prev,
+        settings: {
+          ...prev.settings,
+          [key]: existing.filter((c) => c !== name),
+        },
+      };
+    });
   };
 
   // Budget Handler
@@ -286,11 +337,25 @@ export default function App() {
     }));
   };
 
+  const handleClearAllShoppingItems = () => {
+    setState((prev) => ({
+      ...prev,
+      shoppingList: [],
+    }));
+  };
+
   // Product Catalog Handlers
   const handleAddProduct = (prod: Product) => {
     setState((prev) => ({
       ...prev,
       products: [...prev.products, prod],
+    }));
+  };
+
+  const handleDeleteProduct = (id: string) => {
+    setState((prev) => ({
+      ...prev,
+      products: prev.products.filter((p) => p.id !== id),
     }));
   };
 
@@ -307,7 +372,7 @@ export default function App() {
       store: 'Bravo',
       quantity: 1,
       unit: 'unidad',
-      estimatedUnitPrice: 150,
+      estimatedUnitPrice: 0,
       checked: false,
     }));
 
@@ -342,6 +407,13 @@ export default function App() {
     }));
   };
 
+  const handleDeleteStewardshipRecord = (id: string) => {
+    setState((prev) => ({
+      ...prev,
+      stewardship: (prev.stewardship || []).filter((r) => r.id !== id),
+    }));
+  };
+
   // Render current view
   const renderView = () => {
     switch (activeView) {
@@ -359,6 +431,9 @@ export default function App() {
             state={state}
             onAddTransaction={handleAddTransaction}
             onDeleteTransaction={handleDeleteTransaction}
+            onAddCategory={handleAddCategory}
+            onRenameCategory={handleRenameCategory}
+            onDeleteCategory={handleDeleteCategory}
           />
         );
       case 'expenses':
@@ -367,15 +442,29 @@ export default function App() {
             state={state}
             onAddTransaction={handleAddTransaction}
             onDeleteTransaction={handleDeleteTransaction}
-            onAddCustomExpenseCategory={handleAddCustomExpenseCategory}
+            onAddCategory={handleAddCategory}
+            onRenameCategory={handleRenameCategory}
+            onDeleteCategory={handleDeleteCategory}
           />
         );
       case 'monthly-budget':
         return (
-          <MonthlyBudgetView state={state} onUpdateBudget={handleUpdateBudget} />
+          <MonthlyBudgetView
+            state={state}
+            onUpdateBudget={handleUpdateBudget}
+            onAddCategory={handleAddCategory}
+            onRenameCategory={handleRenameCategory}
+            onDeleteCategory={handleDeleteCategory}
+            onNavigate={(view) => setActiveView(view)}
+          />
         );
       case 'annual-budget':
-        return <AnnualBudgetView state={state} />;
+        return (
+          <AnnualBudgetView
+            state={state}
+            onNavigate={(view) => setActiveView(view)}
+          />
+        );
       case 'calendar':
         return (
           <CalendarView
@@ -399,6 +488,7 @@ export default function App() {
           <EmergencyFundView
             state={state}
             onUpdateEmergencyGoalMonths={handleUpdateEmergencyGoalMonths}
+            onNavigate={(view) => setActiveView(view)}
           />
         );
       case 'investments':
@@ -425,11 +515,16 @@ export default function App() {
             onToggleShoppingItem={handleToggleShoppingItem}
             onDeleteShoppingItem={handleDeleteShoppingItem}
             onClearCheckedShoppingItems={handleClearCheckedShoppingItems}
+            onClearAllShoppingItems={handleClearAllShoppingItems}
           />
         );
       case 'product-catalog':
         return (
-          <ProductCatalogView state={state} onAddProduct={handleAddProduct} />
+          <ProductCatalogView
+            state={state}
+            onAddProduct={handleAddProduct}
+            onDeleteProduct={handleDeleteProduct}
+          />
         );
       case 'price-comparator':
         return <PriceComparatorView state={state} />;
@@ -454,6 +549,7 @@ export default function App() {
           <ChristianStewardshipView
             state={state}
             onAddStewardshipRecord={handleAddStewardshipRecord}
+            onDeleteStewardshipRecord={handleDeleteStewardshipRecord}
           />
         );
       case 'reports':
@@ -496,7 +592,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-dvh bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 overflow-x-clip">
       {/* Navbar */}
       <Navbar
         state={state}
@@ -515,7 +611,7 @@ export default function App() {
         }}
       />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 min-w-0">
         {/* Sidebar */}
         <Sidebar
           activeView={activeView}
@@ -527,7 +623,7 @@ export default function App() {
         />
 
         {/* Main Workspace Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full space-y-6">
+        <main className="flex-1 min-w-0 p-3 sm:p-6 lg:p-8 pb-24 lg:pb-8 max-w-7xl mx-auto w-full space-y-4 sm:space-y-6">
           <SmartAlertsBanner state={state} onNavigate={(view) => setActiveView(view)} />
           {renderView()}
         </main>

@@ -58,15 +58,15 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
   const sortedEvents = [...state.calendarEvents].sort((a, b) => a.date.localeCompare(b.date));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-1">
-            <CalendarDays className="w-4 h-4" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-indigo-600 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+            <CalendarDays className="w-4 h-4 shrink-0" />
             <span>Módulo de Agenda Financiera</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
             Calendario Financiero
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -76,7 +76,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Agendar Evento
@@ -84,74 +84,93 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
       </div>
 
       {/* Events List Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {sortedEvents.map((evt) => {
-          const catInfo = categories.find((c) => c.value === evt.category) || categories[0];
-          return (
-            <div
-              key={evt.id}
-              className={`p-4 rounded-2xl border transition-all flex items-start justify-between gap-3 ${
-                evt.isPaid
-                  ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-75'
-                  : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs'
-              }`}
-            >
-              <div className="space-y-1.5 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${catInfo.color}`}>
-                    {catInfo.label}
-                  </span>
-                  <span className="text-xs text-slate-400 font-medium">
-                    {formatDate(evt.date)}
-                  </span>
+      {sortedEvents.length === 0 ? (
+        <div className="p-10 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+            No tienes pagos ni eventos agendados todavía.
+          </p>
+          <p className="text-xs text-slate-400">
+            Programa fechas de corte, facturas de servicios o cobros quincenales.
+          </p>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold"
+          >
+            + Agendar Primer Evento
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {sortedEvents.map((evt) => {
+            const catInfo = categories.find((c) => c.value === evt.category) || categories[0];
+            return (
+              <div
+                key={evt.id}
+                className={`p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-start justify-between gap-3 ${
+                  evt.isPaid
+                    ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-75'
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xs'
+                }`}
+              >
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${catInfo.color}`}>
+                      {catInfo.label}
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">
+                      {formatDate(evt.date)}
+                    </span>
+                  </div>
+
+                  <h3
+                    className={`font-bold text-sm text-slate-900 dark:text-white break-words ${
+                      evt.isPaid ? 'line-through text-slate-400' : ''
+                    }`}
+                  >
+                    {evt.title}
+                  </h3>
+
+                  {evt.amount && (
+                    <p className="text-sm font-extrabold text-slate-900 dark:text-white tabular-nums">
+                      {formatCurrency(evt.amount)}
+                    </p>
+                  )}
+
+                  {evt.notes && <p className="text-xs text-slate-500 break-words">{evt.notes}</p>}
                 </div>
 
-                <h3
-                  className={`font-bold text-sm text-slate-900 dark:text-white ${
-                    evt.isPaid ? 'line-through text-slate-400' : ''
-                  }`}
-                >
-                  {evt.title}
-                </h3>
+                <div className="flex items-center justify-between sm:justify-end gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 shrink-0">
+                  <button
+                    onClick={() => onToggleEventPaid(evt.id)}
+                    className={`px-3 py-2 sm:py-1.5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 min-h-[38px] ${
+                      evt.isPaid
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-emerald-600 hover:text-white'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                    {evt.isPaid ? 'Pagado' : 'Marcar Pagado'}
+                  </button>
 
-                {evt.amount && (
-                  <p className="text-sm font-extrabold text-slate-900 dark:text-white">
-                    {formatCurrency(evt.amount)}
-                  </p>
-                )}
-
-                {evt.notes && <p className="text-xs text-slate-500">{evt.notes}</p>}
+                  <button
+                    onClick={() => onDeleteEvent(evt.id)}
+                    className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                    title="Eliminar evento"
+                    aria-label="Eliminar evento"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => onToggleEventPaid(evt.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors flex items-center gap-1 ${
-                    evt.isPaid
-                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                      : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-emerald-600 hover:text-white'
-                  }`}
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  {evt.isPaid ? 'Pagado' : 'Marcar Pagado'}
-                </button>
-
-                <button
-                  onClick={() => onDeleteEvent(evt.id)}
-                  className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Add Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92dvh] overflow-y-auto pb-safe">
             <h3 className="font-bold text-slate-900 dark:text-white text-base mb-4">
               Agendar Evento Financiero
             </h3>
@@ -170,7 +189,7 @@ export const CalendarView: React.FC<CalendarViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Fecha *

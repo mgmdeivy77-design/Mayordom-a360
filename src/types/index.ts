@@ -49,9 +49,12 @@ export interface Transaction {
   tags?: string[];
 }
 
+export type BudgetPeriod = 'weekly' | 'monthly' | 'annual';
+
 export interface BudgetCategory {
   category: string;
   limitAmount: number;
+  period?: BudgetPeriod;
 }
 
 export type EventCategory =
@@ -216,7 +219,7 @@ export interface HomeInventoryItem {
 export interface StewardshipRecord {
   id: string;
   date: string;
-  type: 'Diezmo' | 'Ofrenda' | 'Ayuda' | 'Misiones' | 'Donación';
+  type: 'Diezmo' | 'Ofrenda' | 'Ayuda' | 'Misiones' | 'Donación' | 'tithe' | 'offering' | 'firstfruit' | 'charity';
   description?: string;
   amount: number;
   recipient?: string;
@@ -262,6 +265,8 @@ export interface UserSettings {
   language: 'es';
   theme: 'light' | 'dark';
   primaryColor: string; // hex string e.g. '#1e40af'
+  incomeCategories: string[];
+  expenseCategories: string[];
   customIncomeCategories: string[];
   customExpenseCategories: string[];
   favoriteSupermarkets: SupermarketName[];
@@ -271,6 +276,7 @@ export interface UserSettings {
   securityPin: string | null;
   pinEnabled: boolean;
   emergencyFundMonthsGoal: 3 | 6 | 9 | 12;
+  preferredBudgetPeriod?: BudgetPeriod;
 }
 
 export interface UserProfile {

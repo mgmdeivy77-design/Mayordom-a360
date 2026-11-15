@@ -43,17 +43,19 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
       categoryExpenses[t.category] = (categoryExpenses[t.category] || 0) + t.amount;
     });
 
-  state.budgets.forEach((b) => {
-    const spent = categoryExpenses[b.category] || 0;
-    if (spent > b.limitAmount) {
-      alerts.push({
-        type: 'budget',
-        title: `Presupuesto superado en ${b.category}`,
-        message: `Has gastado ${formatCurrency(spent)} de un límite de ${formatCurrency(b.limitAmount)}.`,
-        tab: 'monthly-budget',
-      });
-    }
-  });
+  state.budgets
+    .filter((b) => !b.period || b.period === 'monthly')
+    .forEach((b) => {
+      const spent = categoryExpenses[b.category] || 0;
+      if (spent > b.limitAmount) {
+        alerts.push({
+          type: 'budget',
+          title: `Presupuesto superado en ${b.category}`,
+          message: `Has gastado ${formatCurrency(spent)} de un límite de ${formatCurrency(b.limitAmount)}.`,
+          tab: 'monthly-budget',
+        });
+      }
+    });
 
   // Upcoming unpaid events in next 7 days
   const todayStr = now.toISOString().slice(0, 10);
@@ -111,22 +113,22 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
   // If rendered as modal (isOpen explicit)
   if (isOpen === true) {
     return (
-      <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 px-4 bg-slate-900/60 backdrop-blur-xs">
+      <div className="fixed inset-0 z-50 flex items-start justify-center pt-6 sm:pt-20 px-3 sm:px-4 bg-slate-900/60 backdrop-blur-xs">
         <div className="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in fade-in duration-150">
-          <div className="p-4 bg-amber-500/10 border-b border-amber-500/20 flex items-center justify-between">
-            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold text-base">
-              <ShieldAlert className="w-5 h-5" />
-              <span>Alertas Inteligentes Mayordomo RD</span>
+          <div className="p-4 bg-amber-500/10 border-b border-amber-500/20 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 font-bold text-sm sm:text-base min-w-0">
+              <ShieldAlert className="w-5 h-5 shrink-0" />
+              <span className="truncate">Alertas Inteligentes Mayordomo RD</span>
             </div>
             <button
               onClick={handleClose}
-              className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+              className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="p-4 max-h-[70vh] overflow-y-auto space-y-3">
+          <div className="p-4 max-h-[75dvh] overflow-y-auto space-y-3">
             {alerts.length === 0 ? (
               <div className="p-8 text-center text-slate-500 text-sm">
                 ✨ No tienes alertas financieras críticas activas en este momento. ¡Excelente mayordomía!
@@ -137,11 +139,11 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
                   key={idx}
                   className="p-3.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl flex items-start justify-between gap-3"
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-2.5 min-w-0">
                     <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 shrink-0">
                       <AlertTriangle className="w-4 h-4" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
                         {alert.title}
                       </h4>
@@ -152,7 +154,7 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
                   </div>
                   <button
                     onClick={() => navigateTo(alert.tab)}
-                    className="px-2.5 py-1.5 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-xs font-semibold shrink-0 flex items-center gap-1"
+                    className="px-3 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg text-xs font-semibold shrink-0 flex items-center gap-1"
                   >
                     Ver <ArrowRight className="w-3 h-3" />
                   </button>
@@ -167,15 +169,15 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
 
   // Rendered as inline banner at top of workspace
   return (
-    <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 shadow-xs">
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold text-sm">
-          <ShieldAlert className="w-4 h-4 text-amber-600" />
+    <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-3 sm:p-4 shadow-xs">
+      <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center gap-2 text-amber-800 dark:text-amber-300 font-bold text-xs sm:text-sm">
+          <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
           <span>Alertas Activas ({alerts.length})</span>
         </div>
         <button
           onClick={handleClose}
-          className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg"
+          className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg"
           title="Cerrar banner"
         >
           <X className="w-4 h-4" />
@@ -185,12 +187,12 @@ export const SmartAlertsBanner: React.FC<SmartAlertsBannerProps> = ({
         {alerts.slice(0, 3).map((alert, idx) => (
           <div
             key={idx}
-            className="flex items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-xl border border-amber-100 dark:border-amber-900/30 text-xs"
+            className="flex items-center justify-between gap-2 bg-white dark:bg-slate-900 p-2.5 sm:p-3 rounded-xl border border-amber-100 dark:border-amber-900/30 text-xs"
           >
-            <div className="flex items-center gap-2.5 overflow-hidden mr-2">
+            <div className="flex items-center gap-2 min-w-0">
               <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
               <span className="font-semibold text-slate-900 dark:text-white truncate">
-                {alert.title}:
+                {alert.title}
               </span>
               <span className="text-slate-600 dark:text-slate-400 truncate hidden sm:inline">
                 {alert.message}

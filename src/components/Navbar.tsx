@@ -40,37 +40,37 @@ export const Navbar: React.FC<NavbarProps> = ({
   alertCount = 0,
 }) => {
   return (
-    <header className="sticky top-0 z-30 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
-      <div className="flex items-center justify-between px-4 py-3 max-w-7xl mx-auto">
+    <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-xs transition-colors">
+      <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-3 max-w-7xl mx-auto">
         {/* Left: Mobile Menu + Brand Logo */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <button
             onClick={onOpenMobileMenu}
-            className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            className="lg:hidden p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors shrink-0"
             title="Abrir Menú"
             id="mobile-menu-btn"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
           <button
             onClick={() => onSelectView('dashboard')}
-            className="flex items-center gap-2.5 text-left group"
+            className="flex items-center gap-2 sm:gap-2.5 text-left group min-w-0"
             id="brand-logo-btn"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-6 h-6" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform shrink-0">
+              <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="font-bold text-lg text-slate-900 dark:text-white leading-tight">
+                <span className="font-bold text-base sm:text-lg text-slate-900 dark:text-white leading-tight truncate">
                   Mayordomo
                 </span>
-                <span className="bg-blue-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider">
+                <span className="bg-blue-600 text-white text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider shrink-0">
                   RD
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 font-medium truncate">
                 Finanzas & Mayordomía Familiar
               </p>
             </div>
@@ -95,14 +95,14 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Right: Quick Actions */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
           {/* PWA Install Button */}
           <PWAInstallButton variant="compact" />
 
           {/* Quick Add Button */}
           <button
             onClick={onOpenQuickAdd}
-            className="hidden sm:flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-transform active:scale-95"
+            className="hidden sm:flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-transform active:scale-95 whitespace-nowrap"
             id="quick-add-btn"
           >
             <PlusCircle className="w-4 h-4" />
@@ -112,7 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Search button mobile */}
           <button
             onClick={onOpenSearch}
-            className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+            className="md:hidden p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
             title="Buscar"
           >
             <Search className="w-5 h-5" />
@@ -121,13 +121,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Alert Bell */}
           <button
             onClick={onOpenAlerts}
-            className="relative p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="relative p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
             title="Alertas Financieras"
             id="alerts-bell-btn"
           >
             <Bell className="w-5 h-5" />
             {alertCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-extrabold flex items-center justify-center rounded-full animate-pulse">
+              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-extrabold flex items-center justify-center rounded-full">
                 {alertCount}
               </span>
             )}
@@ -136,7 +136,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Theme Toggle */}
           <button
             onClick={onToggleDarkMode}
-            className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
             title={isDarkMode ? 'Modo Claro' : 'Modo Oscuro'}
             id="theme-toggle-btn"
           >
@@ -151,7 +151,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {state?.settings?.pinEnabled && (
             <button
               onClick={onLockApp}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+              className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
               title="Bloquear Aplicación"
               id="lock-app-btn"
             >

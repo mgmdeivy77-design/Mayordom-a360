@@ -177,20 +177,20 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Top Banner Header */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-6 sm:p-8 rounded-3xl shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-lg relative overflow-hidden">
         <div className="absolute right-0 top-0 opacity-10 pointer-events-none translate-x-8 -translate-y-8">
-          <BookOpen className="w-80 h-80 text-white" />
+          <BookOpen className="w-64 h-64 sm:w-80 sm:h-80 text-white" />
         </div>
 
         <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 bg-blue-500/30 backdrop-blur-md text-blue-200 px-3 py-1 rounded-full text-xs font-bold border border-blue-400/30">
-            <BookOpen className="w-4 h-4" />
+          <div className="inline-flex items-center gap-2 bg-blue-500/30 backdrop-blur-md text-blue-200 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold border border-blue-400/30">
+            <BookOpen className="w-4 h-4 shrink-0" />
             <span>Manual del Usuario & Guía Oficial</span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">
             Guía de Uso Mayordomo Familiar RD
           </h1>
 
@@ -199,20 +199,20 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
             de tu hogar, ahorrar en el supermercado, saldar deudas y hacer crecer tu patrimonio familiar.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2">
             <button
               onClick={exportUserGuidePdf}
-              className="flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold px-5 py-2.5 rounded-2xl text-xs transition-transform active:scale-95 shadow-md"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold px-5 py-2.5 rounded-xl sm:rounded-2xl text-xs transition-transform active:scale-95 shadow-md"
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 shrink-0" />
               <span>Exportar Guía Completa en PDF</span>
             </button>
 
             <button
               onClick={() => window.print()}
-              className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2.5 rounded-2xl text-xs backdrop-blur-md transition-colors"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-bold px-4 py-2.5 rounded-xl sm:rounded-2xl text-xs backdrop-blur-md transition-colors"
             >
-              <Printer className="w-4 h-4" />
+              <Printer className="w-4 h-4 shrink-0" />
               <span>Imprimir Manual</span>
             </button>
           </div>
@@ -220,7 +220,7 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white dark:bg-slate-900 p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         {/* Category Tabs */}
         <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
           {[
@@ -275,15 +275,15 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
             return (
               <div
                 key={section.id}
-                className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-5"
+                className="bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-5"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-2xl shrink-0 ${section.color}`}>
-                      <IconComponent className="w-6 h-6" />
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`p-2.5 sm:p-3 rounded-2xl shrink-0 ${section.color}`}>
+                      <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div>
-                      <h2 className="font-extrabold text-slate-900 dark:text-white text-lg">
+                    <div className="min-w-0">
+                      <h2 className="font-extrabold text-slate-900 dark:text-white text-base sm:text-lg">
                         {section.title}
                       </h2>
                       <p className="text-xs text-slate-500 mt-0.5">{section.summary}</p>
@@ -328,12 +328,12 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
       </div>
 
       {/* FAQ Accordion Section */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
         <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider">
-          <HelpCircle className="w-4 h-4" />
+          <HelpCircle className="w-4 h-4 shrink-0" />
           <span>Preguntas Frecuentes</span>
         </div>
-        <h3 className="text-xl font-extrabold text-slate-900 dark:text-white">
+        <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
           Preguntas Frecuentes y Mejores Prácticas
         </h3>
 
@@ -381,7 +381,7 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
       </div>
 
       {/* Footer Call to Action Export */}
-      <div className="p-6 bg-gradient-to-r from-slate-900 to-blue-950 text-white rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+      <div className="p-4 sm:p-6 bg-gradient-to-r from-slate-900 to-blue-950 text-white rounded-2xl sm:rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
         <div className="space-y-1 text-center sm:text-left">
           <h3 className="font-extrabold text-base">¿Deseas conservar este manual impreso o en PDF?</h3>
           <p className="text-xs text-slate-300">
@@ -391,7 +391,7 @@ export const UserGuideView: React.FC<UserGuideViewProps> = ({ onNavigate }) => {
 
         <button
           onClick={exportUserGuidePdf}
-          className="flex items-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3 rounded-2xl text-xs shrink-0 transition-transform active:scale-95 shadow-md"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-500 text-white font-bold px-6 py-3 rounded-xl sm:rounded-2xl text-xs shrink-0 transition-transform active:scale-95 shadow-md"
         >
           <Download className="w-4 h-4" />
           <span>Descargar Guía PDF</span>

@@ -56,19 +56,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ],
     },
     {
-      title: 'MÓDULOS FINANCIEROS',
+      title: 'PLAN FINANCIERO PASO A PASO',
       items: [
-        { id: 'incomes', label: 'Gestión de Ingresos', icon: Wallet },
-        { id: 'expenses', label: 'Gestión de Gastos', icon: Receipt },
-        { id: 'monthly-budget', label: 'Presupuesto Mensual', icon: PieChart },
-        { id: 'annual-budget', label: 'Presupuesto Anual', icon: BarChart3 },
-        { id: 'calendar', label: 'Calendario Financiero', icon: CalendarDays },
-        { id: 'savings-goals', label: 'Metas de Ahorro', icon: Target },
-        { id: 'emergency-fund', label: 'Fondo de Emergencia', icon: Shield },
-        { id: 'investments', label: 'Inversiones & Renta', icon: TrendingUp },
-        { id: 'debts', label: 'Control de Deudas', icon: CreditCard },
+        { id: 'incomes', label: '1. Ingresos y Categorías', icon: Wallet },
+        { id: 'expenses', label: '2. Gastos y Categorías', icon: Receipt },
+        { id: 'monthly-budget', label: '3. Presupuesto Semanal / Mes', icon: PieChart },
+        { id: 'annual-budget', label: '4. Presupuesto Anual', icon: BarChart3 },
+        { id: 'calendar', label: '5. Calendario de Pagos', icon: CalendarDays },
+        { id: 'emergency-fund', label: '6. Fondo de Emergencia', icon: Shield },
+        { id: 'savings-goals', label: '7. Metas de Ahorro', icon: Target },
+        { id: 'debts', label: '8. Control de Deudas', icon: CreditCard },
+        { id: 'investments', label: '9. Inversiones & Renta', icon: TrendingUp },
         ...(isStewardshipEnabled
-          ? [{ id: 'christian-stewardship', label: 'Mayordomía Cristiana', icon: HeartHandshake }]
+          ? [{ id: 'christian-stewardship', label: '10. Mayordomía Cristiana', icon: HeartHandshake }]
           : []),
       ],
     },
@@ -107,7 +107,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const sidebarContent = (
-    <div className="h-full flex flex-col justify-between py-4 px-3 overflow-y-auto">
+    <div className="flex-1 min-h-0 flex flex-col justify-between py-4 px-3 overflow-y-auto pb-safe">
       <div className="space-y-6">
         {navGroups.map((group) => (
           <div key={group.title}>
@@ -176,14 +176,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs"
             onClick={onCloseMobileMenu}
           />
-          <div className="relative w-72 max-w-[80vw] bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col z-10">
-            <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+          <div className="relative w-[84vw] max-w-[300px] bg-white dark:bg-slate-900 h-dvh shadow-2xl flex flex-col z-10 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800 shrink-0">
               <span className="font-bold text-slate-900 dark:text-white text-base">
                 Menú Mayordomo RD
               </span>
               <button
                 onClick={onCloseMobileMenu}
-                className="p-1.5 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl"
+                aria-label="Cerrar menú"
               >
                 <X className="w-5 h-5" />
               </button>

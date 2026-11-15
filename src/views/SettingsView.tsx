@@ -11,7 +11,7 @@ import {
   Smartphone,
 } from 'lucide-react';
 import { AppState } from '../types';
-import { exportAppStateAsJson } from '../utils/storage';
+import { exportAppStateAsJson, normalizeAppState } from '../utils/storage';
 import { initialAppState } from '../data/initialData';
 import { PWAInstallButton } from '../components/PWAInstallButton';
 
@@ -81,7 +81,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
     setEnablePin(initialAppState.settings.pinEnabled);
     setPinCode(initialAppState.settings.securityPin || '');
     setConfirmResetOpen(false);
-    showToast('success', 'Datos iniciales de República Dominicana restaurados.');
+    showToast('success', 'Todos los datos se han reiniciado en blanco correctamente.');
   };
 
   const handleRestoreJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +93,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
       try {
         const parsed = JSON.parse(event.target?.result as string);
         if (parsed && Array.isArray(parsed.transactions)) {
-          onUpdateState(parsed);
+          onUpdateState(normalizeAppState(parsed));
           showToast('success', '¡Respaldo restaurado con éxito!');
         } else {
           showToast('error', 'El archivo JSON no corresponde a un respaldo válido de Mayordomo RD.');
@@ -107,12 +107,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Toast Notification */}
       {toast && (
         <div
           role="status"
-          className={`flex items-center gap-2.5 p-4 rounded-2xl border text-xs font-bold shadow-sm ${
+          className={`flex items-center gap-2.5 p-3.5 sm:p-4 rounded-2xl border text-xs font-bold shadow-sm ${
             toast.type === 'success'
               ? 'bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-900 text-emerald-800 dark:text-emerald-200'
               : 'bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-900 text-rose-800 dark:text-rose-200'
@@ -128,12 +128,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
       )}
 
       {/* Header */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 text-indigo-600 font-bold text-xs uppercase tracking-wider mb-1">
-          <Settings className="w-4 h-4" />
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+          <Settings className="w-4 h-4 shrink-0" />
           <span>Módulo de Configuración del Sistema</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
           Ajustes, App Android & Seguridad
         </h1>
         <p className="text-xs text-slate-500 mt-1">
@@ -142,19 +142,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
       </div>
 
       {/* PWA Install & Mobile Experience Card */}
-      <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-        <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-          <Smartphone className="w-5 h-5 text-blue-600" />
+      <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">
+          <Smartphone className="w-5 h-5 text-blue-600 shrink-0" />
           Aplicación Móvil (PWA Android / Sin Conexión)
         </h3>
         <PWAInstallButton variant="card" />
       </div>
 
-      <form onSubmit={handleSaveProfile} className="space-y-6">
+      <form onSubmit={handleSaveProfile} className="space-y-4 sm:space-y-6">
         {/* Family Profile */}
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-            <User className="w-5 h-5 text-indigo-600" />
+        <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">
+            <User className="w-5 h-5 text-indigo-600 shrink-0" />
             Perfil de la Familia
           </h3>
 
@@ -194,9 +194,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
         </div>
 
         {/* Security & System Options */}
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-          <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-            <Lock className="w-5 h-5 text-indigo-600" />
+        <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+          <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">
+            <Lock className="w-5 h-5 text-indigo-600 shrink-0" />
             Seguridad & Módulos Opcionales
           </h3>
 
@@ -266,23 +266,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
       </form>
 
       {/* Backup & Restore Data */}
-      <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
-        <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-          <Download className="w-5 h-5 text-indigo-600" />
+      <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-4">
+        <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">
+          <Download className="w-5 h-5 text-indigo-600 shrink-0" />
           Respaldo & Restauración de Datos (LocalStorage)
         </h3>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3">
           <button
             type="button"
             onClick={handleBackup}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-xl text-xs hover:bg-slate-200 dark:hover:bg-slate-700"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold rounded-xl text-xs hover:bg-slate-200 dark:hover:bg-slate-700"
           >
             <Download className="w-4 h-4" />
             Descargar Respaldo JSON
           </button>
 
-          <label className="flex items-center gap-2 px-5 py-2.5 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold rounded-xl text-xs cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/60">
+          <label className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 font-bold rounded-xl text-xs cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-900/60">
             <Upload className="w-4 h-4" />
             <span>Restaurar desde JSON</span>
             <input type="file" accept=".json" onChange={handleRestoreJSON} className="hidden" />
@@ -291,28 +291,28 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
           <button
             type="button"
             onClick={() => setConfirmResetOpen(true)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-bold rounded-xl text-xs hover:bg-rose-100 dark:hover:bg-rose-900/60"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 font-bold rounded-xl text-xs hover:bg-rose-100 dark:hover:bg-rose-900/60"
           >
             <RefreshCw className="w-4 h-4" />
-            Cargar Datos de Ejemplo RD
+            Reiniciar Datos en Blanco
           </button>
         </div>
       </div>
 
       {/* Custom In-App Confirmation Modal (no window.confirm) */}
       {confirmResetOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-950/70 backdrop-blur-xs">
+          <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-2xl space-y-4 pb-safe">
             <div className="flex items-center gap-3">
               <div className="p-2.5 bg-rose-100 dark:bg-rose-950 text-rose-600 rounded-xl">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-slate-900 dark:text-white text-sm">
-                ¿Restaurar datos de ejemplo RD?
+                ¿Reiniciar todos los datos en blanco?
               </h3>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Esta acción reemplazará tus transacciones, metas y configuración actual por los datos de ejemplo iniciales de República Dominicana. Te recomendamos descargar un respaldo JSON primero.
+              Esta acción eliminará tus transacciones, presupuestos, metas y registros actuales para dejar la aplicación completamente limpia. Te recomendamos descargar un respaldo JSON primero.
             </p>
             <div className="flex justify-end gap-2 pt-2">
               <button
@@ -327,7 +327,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ state, onUpdateState
                 onClick={handleConfirmReset}
                 className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-bold text-white"
               >
-                Sí, restaurar datos
+                Sí, reiniciar en blanco
               </button>
             </div>
           </div>

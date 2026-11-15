@@ -81,19 +81,20 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ variant = 'c
 
       {showGuideModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-xs p-0 sm:p-4">
-          <div className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-xl">
+          <div className="w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-2xl max-h-[90dvh] overflow-y-auto pb-safe">
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="p-2 bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 rounded-xl shrink-0">
                   <Smartphone className="w-5 h-5" />
                 </div>
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                <h3 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white truncate">
                   {isIOS ? 'Instalar en iPhone / iPad' : 'Instalar en Android (Chrome)'}
                 </h3>
               </div>
               <button
                 onClick={() => setShowGuideModal(false)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+                className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl shrink-0"
+                aria-label="Cerrar"
               >
                 <X className="w-5 h-5" />
               </button>

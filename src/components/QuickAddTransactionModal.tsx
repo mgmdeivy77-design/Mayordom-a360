@@ -26,43 +26,15 @@ export const QuickAddTransactionModal: React.FC<QuickAddTransactionModalProps> =
 
   if (!isOpen) return null;
 
-  const incomeCategories = [
-    'Salario',
-    'Negocio',
-    'Freelance',
-    'Comisiones',
-    'Bonificaciones',
-    'Alquileres',
-    'Remesas',
-    'Regalos',
-    'Ingresos extraordinarios',
-    ...state.settings.customIncomeCategories,
-  ];
+  const incomeCategories =
+    state.settings.incomeCategories && state.settings.incomeCategories.length > 0
+      ? state.settings.incomeCategories
+      : ['Salario', 'Negocio', 'Otros'];
 
-  const expenseCategories = [
-    'Alimentos',
-    'Combustible',
-    'Electricidad',
-    'Agua',
-    'Internet',
-    'Celular',
-    'Colegio',
-    'Universidad',
-    'Salud',
-    'Medicamentos',
-    'Diezmos',
-    'Ofrendas',
-    'Transporte',
-    'Préstamos',
-    'Tarjetas',
-    'Ropa',
-    'Recreación',
-    'Impuestos',
-    'Mascotas',
-    'Emergencias',
-    'Otros',
-    ...state.settings.customExpenseCategories,
-  ];
+  const expenseCategories =
+    state.settings.expenseCategories && state.settings.expenseCategories.length > 0
+      ? state.settings.expenseCategories
+      : ['Alimentos', 'Otros'];
 
   const categories = type === 'income' ? incomeCategories : expenseCategories;
 
@@ -93,22 +65,22 @@ export const QuickAddTransactionModal: React.FC<QuickAddTransactionModalProps> =
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-in zoom-in-95 duration-150">
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
-            <Plus className="w-5 h-5 text-blue-600" />
-            Registrar Movimiento Financiero
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+      <div className="w-full sm:max-w-lg bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[92dvh] animate-in zoom-in-95 duration-150">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
+          <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base flex items-center gap-2">
+            <Plus className="w-5 h-5 text-blue-600 shrink-0" />
+            <span className="truncate">Registrar Movimiento</span>
           </h3>
           <button
             onClick={onClose}
-            className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+            className="p-2 min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-5 space-y-4 overflow-y-auto">
           {/* Type Selector Toggle */}
           <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
             <button
@@ -117,14 +89,14 @@ export const QuickAddTransactionModal: React.FC<QuickAddTransactionModalProps> =
                 setType('expense');
                 setCategory(expenseCategories[0]);
               }}
-              className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
                 type === 'expense'
                   ? 'bg-rose-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
               }`}
             >
-              <Receipt className="w-4 h-4" />
-              Gasto / Salida (DOP$)
+              <Receipt className="w-4 h-4 shrink-0" />
+              <span>Gasto (DOP$)</span>
             </button>
             <button
               type="button"
@@ -132,14 +104,14 @@ export const QuickAddTransactionModal: React.FC<QuickAddTransactionModalProps> =
                 setType('income');
                 setCategory(incomeCategories[0]);
               }}
-              className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-bold transition-colors ${
+              className={`flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${
                 type === 'income'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
               }`}
             >
-              <Wallet className="w-4 h-4" />
-              Ingreso / Entrada (DOP$)
+              <Wallet className="w-4 h-4 shrink-0" />
+              <span>Ingreso (DOP$)</span>
             </button>
           </div>
 

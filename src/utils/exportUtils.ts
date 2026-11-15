@@ -81,7 +81,7 @@ export const exportPdfReport = (state: AppState) => {
     g.category,
     formatCurrency(g.targetAmount),
     formatCurrency(g.currentAmount),
-    `${Math.round((g.currentAmount / g.targetAmount) * 100)}%`,
+    `${g.targetAmount > 0 ? Math.round((g.currentAmount / g.targetAmount) * 100) : 0}%`,
     formatDate(g.estimatedDate),
   ]);
 
@@ -116,6 +116,7 @@ export const exportExcelReport = (state: AppState) => {
   // Budget Sheet
   const budgetSheetData = state.budgets.map((b) => ({
     Categoría: b.category,
+    Período: b.period === 'weekly' ? 'Semanal' : b.period === 'annual' ? 'Anual' : 'Mensual',
     'Límite Presupuestado': b.limitAmount,
   }));
   const wsBudget = XLSX.utils.json_to_sheet(budgetSheetData);

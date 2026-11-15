@@ -9,6 +9,7 @@ interface ShoppingListViewProps {
   onToggleShoppingItem: (id: string) => void;
   onDeleteShoppingItem: (id: string) => void;
   onClearCheckedShoppingItems: () => void;
+  onClearAllShoppingItems?: () => void;
 }
 
 export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
@@ -17,9 +18,10 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
   onToggleShoppingItem,
   onDeleteShoppingItem,
   onClearCheckedShoppingItems,
+  onClearAllShoppingItems,
 }) => {
   const [selectedStore, setSelectedStore] = useState<SupermarketName>('Bravo');
-  const [budgetCap, setBudgetCap] = useState('15000');
+  const [budgetCap, setBudgetCap] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
 
   // Form
@@ -59,7 +61,7 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = parseFloat(quantity) || 1;
-    const price = parseFloat(estimatedUnitPrice) || 100;
+    const price = parseFloat(estimatedUnitPrice) || 0;
     if (!name) return;
 
     const newItem: ShoppingListItem = {
@@ -80,15 +82,15 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs uppercase tracking-wider mb-1">
-            <ShoppingBag className="w-4 h-4" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-emerald-600 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+            <ShoppingBag className="w-4 h-4 shrink-0" />
             <span>Módulo de Compras Inteligentes</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
             Lista Inteligente de Compras RD
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -96,16 +98,24 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
           <button
             onClick={onClearCheckedShoppingItems}
-            className="px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100"
+            className="px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             Limpiar Comprados
           </button>
+          {onClearAllShoppingItems && state.shoppingList.length > 0 && (
+            <button
+              onClick={onClearAllShoppingItems}
+              className="px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl sm:rounded-2xl border border-rose-200 dark:border-rose-900/50 text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+            >
+              Vaciar Lista
+            </button>
+          )}
           <button
             onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 sm:px-5 rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95"
           >
             <Plus className="w-4 h-4" />
             Agregar Artículo
@@ -139,42 +149,44 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
       </div>
 
       {/* Budget Limit vs Estimated Total Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="p-3.5 sm:p-4 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-100 dark:border-emerald-900/40">
           <p className="text-xs text-emerald-700 dark:text-emerald-300 font-medium">Estimado Total Carrito</p>
-          <p className="text-2xl font-extrabold text-emerald-900 dark:text-emerald-100 mt-0.5">
+          <p className="text-xl sm:text-2xl font-extrabold text-emerald-900 dark:text-emerald-100 mt-0.5 tabular-nums truncate">
             {formatCurrency(totalEstimatedCost)}
           </p>
         </div>
 
-        <div className="p-4 bg-blue-50 dark:bg-blue-950/40 rounded-2xl border border-blue-100 dark:border-blue-900/40">
+        <div className="p-3.5 sm:p-4 bg-blue-50 dark:bg-blue-950/40 rounded-2xl border border-blue-100 dark:border-blue-900/40">
           <p className="text-xs text-blue-700 dark:text-blue-300 font-medium">Ya Comprado (Efectivo)</p>
-          <p className="text-2xl font-extrabold text-blue-900 dark:text-blue-100 mt-0.5">
+          <p className="text-xl sm:text-2xl font-extrabold text-blue-900 dark:text-blue-100 mt-0.5 tabular-nums truncate">
             {formatCurrency(checkedCost)}
           </p>
         </div>
 
-        <div className="p-4 bg-amber-50 dark:bg-amber-950/40 rounded-2xl border border-amber-100 dark:border-amber-900/40 flex items-center justify-between">
-          <div>
-            <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">Límite Tope Compras</p>
+        <div className="p-3.5 sm:p-4 bg-amber-50 dark:bg-amber-950/40 rounded-2xl border border-amber-100 dark:border-amber-900/40 flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">Límite Tope Compras (RD$)</p>
             <input
               type="number"
+              min="0"
               value={budgetCap}
               onChange={(e) => setBudgetCap(e.target.value)}
-              className="w-28 text-xl font-extrabold bg-transparent text-amber-900 dark:text-amber-100 outline-none"
+              placeholder="Sin tope"
+              className="w-full max-w-[140px] text-lg sm:text-xl font-extrabold bg-transparent text-amber-900 dark:text-amber-100 outline-none placeholder:text-amber-700/40 tabular-nums"
             />
           </div>
           {isOverBudget && (
-            <span className="bg-rose-600 text-white text-[10px] font-extrabold px-2 py-1 rounded">
-              !Límite Excedido!
+            <span className="bg-rose-600 text-white text-[10px] font-extrabold px-2 py-1 rounded shrink-0">
+              ¡Límite Excedido!
             </span>
           )}
         </div>
       </div>
 
       {/* Shopping List Items */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs space-y-3">
-        <h3 className="font-bold text-slate-900 dark:text-white text-base">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-6 shadow-xs space-y-3">
+        <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base">
           Artículos en la Lista ({selectedStore})
         </h3>
 
@@ -187,45 +199,48 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
             filteredItems.map((item) => (
               <div
                 key={item.id}
-                className={`p-3.5 rounded-xl border flex items-center justify-between gap-3 transition-colors ${
+                className={`p-3 sm:p-3.5 rounded-xl border flex items-center justify-between gap-2.5 sm:gap-3 transition-colors ${
                   item.checked
                     ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800 opacity-60'
                     : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-2xs'
                 }`}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                   <button
                     onClick={() => onToggleShoppingItem(item.id)}
-                    className={`w-6 h-6 rounded-lg border flex items-center justify-center transition-colors ${
+                    className={`w-7 h-7 sm:w-6 sm:h-6 rounded-lg border flex items-center justify-center transition-colors shrink-0 ${
                       item.checked
                         ? 'bg-emerald-600 border-emerald-600 text-white'
                         : 'border-slate-300 dark:border-slate-600 bg-transparent'
                     }`}
+                    aria-label={item.checked ? 'Desmarcar artículo' : 'Marcar como comprado'}
                   >
                     {item.checked && <Check className="w-4 h-4" />}
                   </button>
 
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h4
-                      className={`font-bold text-sm text-slate-900 dark:text-white ${
+                      className={`font-bold text-sm text-slate-900 dark:text-white truncate ${
                         item.checked ? 'line-through text-slate-400' : ''
                       }`}
                     >
                       {item.name}
                     </h4>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-[11px] sm:text-xs text-slate-500 truncate tabular-nums">
                       Cant: {item.quantity} {item.unit} • Est.: {formatCurrency(item.estimatedUnitPrice)}/u
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="font-extrabold text-slate-900 dark:text-white text-sm">
+                <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                  <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm tabular-nums">
                     {formatCurrency(item.quantity * item.estimatedUnitPrice)}
                   </span>
                   <button
                     onClick={() => onDeleteShoppingItem(item.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg"
+                    className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                    title="Eliminar artículo"
+                    aria-label="Eliminar artículo"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -238,8 +253,8 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
 
       {/* Add Item Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92dvh] overflow-y-auto pb-safe">
             <h3 className="font-bold text-slate-900 dark:text-white text-base mb-4">
               Agregar Artículo a la Lista
             </h3>
@@ -258,7 +273,7 @@ export const ShoppingListView: React.FC<ShoppingListViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Cantidad

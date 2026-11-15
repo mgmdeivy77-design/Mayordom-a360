@@ -85,8 +85,14 @@ export const calculateFinancialTotals = (state: AppState): FinancialTotals => {
   // Total debt current balances
   const totalDebts = debts.reduce((acc, d) => acc + d.currentBalance, 0);
 
-  // Total liquid cash available = total income - total expense (simulated base liquid + current month balance)
-  const availableCash = Math.max(0, 145000 + totalIncome - totalExpense);
+  // Total liquid cash available = all-time recorded income minus all-time recorded expenses
+  const allTimeIncome = transactions
+    .filter((t) => t.type === 'income')
+    .reduce((acc, t) => acc + t.amount, 0);
+  const allTimeExpense = transactions
+    .filter((t) => t.type === 'expense')
+    .reduce((acc, t) => acc + t.amount, 0);
+  const availableCash = Math.max(0, allTimeIncome - allTimeExpense);
 
   // Net worth = Assets (Savings + Investments + Available Cash) - Liabilities (Debts)
   const totalAssets = availableCash + totalSavings + totalInvestments;
@@ -96,8 +102,9 @@ export const calculateFinancialTotals = (state: AppState): FinancialTotals => {
   const dayOfMonth = Math.max(1, now.getDate());
   const dailyAverageExpense = totalExpense / dayOfMonth;
 
-  // Budget usage %
-  const totalBudgetLimit = budgets.reduce((acc, b) => acc + b.limitAmount, 0);
+  // Budget usage % (monthly budgets)
+  const monthlyBudgets = budgets.filter((b) => !b.period || b.period === 'monthly');
+  const totalBudgetLimit = monthlyBudgets.reduce((acc, b) => acc + b.limitAmount, 0);
   const budgetUsagePercentage =
     totalBudgetLimit > 0 ? Math.min(100, Math.round((totalExpense / totalBudgetLimit) * 100)) : 0;
 
@@ -174,9 +181,10 @@ export const generateLocalFinancialAdvice = (state: AppState) => {
     .reduce((acc, t) => acc + t.amount, 0);
 
   const emergencyGoal = savingsGoals.find((g) => g.category === 'Emergencia');
-  const emergencyPercentage = emergencyGoal
-    ? Math.round((emergencyGoal.currentAmount / emergencyGoal.targetAmount) * 100)
-    : 65;
+  const emergencyPercentage =
+    emergencyGoal && emergencyGoal.targetAmount > 0
+      ? Math.round((emergencyGoal.currentAmount / emergencyGoal.targetAmount) * 100)
+      : 0;
 
   const recs = [];
 

@@ -77,15 +77,15 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div>
-          <div className="flex items-center gap-2 text-amber-600 font-bold text-xs uppercase tracking-wider mb-1">
-            <Target className="w-4 h-4" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 text-amber-600 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+            <Target className="w-4 h-4 shrink-0" />
             <span>Módulo de Metas de Ahorro</span>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
             Propósitos Financieros Familiares
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -95,7 +95,7 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-3 rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2.5 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl text-xs sm:text-sm shadow-md transition-transform active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Nueva Meta de Ahorro
@@ -103,89 +103,110 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
       </div>
 
       {/* Goals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {state.savingsGoals.map((goal) => {
-          const percentage = Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100));
-          const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
+      {state.savingsGoals.length === 0 ? (
+        <div className="p-10 bg-white dark:bg-slate-900 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">
+            Aún no has creado ninguna meta de ahorro.
+          </p>
+          <p className="text-xs text-slate-400">
+            Crea metas para tu Fondo de Emergencia, vivienda, vehículo o educación familiar.
+          </p>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="px-4 py-2 bg-amber-500 text-slate-950 rounded-xl text-xs font-bold"
+          >
+            + Crear Primera Meta
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {state.savingsGoals.map((goal) => {
+            const percentage =
+              goal.targetAmount > 0
+                ? Math.min(100, Math.round((goal.currentAmount / goal.targetAmount) * 100))
+                : 0;
+            const remaining = Math.max(0, goal.targetAmount - goal.currentAmount);
 
-          return (
-            <div
-              key={goal.id}
-              className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-4"
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-inner">
-                    <PiggyBank className="w-6 h-6" />
+            return (
+              <div
+                key={goal.id}
+                className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col justify-between space-y-4"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-inner shrink-0">
+                      <PiggyBank className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-500">
+                        {goal.category}
+                      </span>
+                      <h3 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base mt-1 truncate">
+                        {goal.title}
+                      </h3>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-slate-500">
-                      {goal.category}
+
+                  <button
+                    onClick={() => onDeleteGoal(goal.id)}
+                    className="min-w-[40px] min-h-[40px] flex items-center justify-center text-slate-400 hover:text-rose-600 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/30 shrink-0"
+                    title="Eliminar Meta"
+                    aria-label="Eliminar Meta"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Amounts and Progress */}
+                <div className="space-y-2">
+                  <div className="flex flex-wrap justify-between items-baseline gap-1">
+                    <span className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tabular-nums">
+                      {formatCurrency(goal.currentAmount)}
                     </span>
-                    <h3 className="font-bold text-slate-900 dark:text-white text-base mt-1">
-                      {goal.title}
-                    </h3>
+                    <span className="text-xs text-slate-500 font-semibold tabular-nums">
+                      Meta: {formatCurrency(goal.targetAmount)}
+                    </span>
+                  </div>
+
+                  <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
+                    <div
+                      className="bg-amber-500 h-full rounded-full transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+
+                  <div className="flex justify-between items-center text-xs text-slate-500 tabular-nums">
+                    <span>Progreso: {percentage}%</span>
+                    <span>Faltan: {formatCurrency(remaining)}</span>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => onDeleteGoal(goal.id)}
-                  className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg"
-                  title="Eliminar Meta"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+                  <div>
+                    <span>Aporte rec.: </span>
+                    <strong className="text-slate-900 dark:text-white tabular-nums">
+                      {formatCurrency(goal.recommendedMonthlyContribution)}/mes
+                    </strong>
+                  </div>
 
-              {/* Amounts and Progress */}
-              <div className="space-y-2">
-                <div className="flex justify-between items-baseline">
-                  <span className="text-2xl font-extrabold text-slate-900 dark:text-white">
-                    {formatCurrency(goal.currentAmount)}
-                  </span>
-                  <span className="text-xs text-slate-500 font-semibold">
-                    Meta: {formatCurrency(goal.targetAmount)}
-                  </span>
-                </div>
-
-                <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
-                  <div
-                    className="bg-amber-500 h-full rounded-full transition-all duration-500"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
-
-                <div className="flex justify-between items-center text-xs text-slate-500">
-                  <span>Progreso: {percentage}%</span>
-                  <span>Faltan: {formatCurrency(remaining)}</span>
+                  <button
+                    onClick={() => setDepositModalGoal(goal)}
+                    className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-transform active:scale-95 min-h-[38px]"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    Abonar Dinero
+                  </button>
                 </div>
               </div>
-
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500">
-                <div>
-                  <span>Aporte rec.: </span>
-                  <strong className="text-slate-900 dark:text-white">
-                    {formatCurrency(goal.recommendedMonthlyContribution)}/mes
-                  </strong>
-                </div>
-
-                <button
-                  onClick={() => setDepositModalGoal(goal)}
-                  className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-transform active:scale-95"
-                >
-                  <PlusCircle className="w-3.5 h-3.5" />
-                  Abonar Dinero
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Deposit Modal */}
       {depositModalGoal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div className="w-full max-w-sm bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92dvh] overflow-y-auto pb-safe">
             <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">
               Abonar a {depositModalGoal.title}
             </h3>
@@ -233,8 +254,8 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
       {/* Add Goal Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 max-h-[92dvh] overflow-y-auto pb-safe">
             <h3 className="font-bold text-slate-900 dark:text-white text-base mb-4">
               Nueva Meta de Ahorro
             </h3>
@@ -253,7 +274,7 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Monto Objetivo (RD$) *
@@ -285,7 +306,7 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Categoría

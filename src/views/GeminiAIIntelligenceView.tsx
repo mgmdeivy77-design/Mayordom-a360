@@ -171,14 +171,14 @@ export const GeminiAIIntelligenceView: React.FC<GeminiAIIntelligenceViewProps> =
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
-        <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase tracking-wider mb-1">
-          <Bot className="w-4 h-4" />
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-[11px] sm:text-xs uppercase tracking-wider mb-1">
+          <Bot className="w-4 h-4 shrink-0" />
           <span>Asistente Financiero Inteligente</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
           Asesor Financiero Mayordomo AI
         </h1>
         <p className="text-xs text-slate-500 mt-1">
@@ -241,13 +241,13 @@ export const GeminiAIIntelligenceView: React.FC<GeminiAIIntelligenceViewProps> =
 
       {/* Response Display */}
       {response && (
-        <div className="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div className="flex items-start gap-3">
-              <div className="p-3 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-2xl shrink-0">
-                <Sparkles className="w-6 h-6" />
+        <div className="p-4 sm:p-6 bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md space-y-5 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div className="flex items-start gap-3 min-w-0">
+              <div className="p-2.5 sm:p-3 bg-indigo-100 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 rounded-2xl shrink-0">
+                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-extrabold text-slate-900 dark:text-white text-base">
                     Diagnóstico Financiero
